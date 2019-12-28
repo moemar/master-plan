@@ -2,17 +2,25 @@
   <div>
     <h1>Settings</h1>
     <v-text-field
-      label="Test"
+      label="Start Weight"
       type="number"
-      v-model="test"
+      :value="startWeight"
+      @input="updateStartWeight"
     ></v-text-field>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 export default {
-  data: () => ({
-    test: null
-  })
+  computed: mapState({
+    startWeight: state => state.settings.startWeight
+  }),
+  methods: {
+    ...mapMutations({
+      updateStartWeight: 'settings/updateStartWeight'
+    })
+  }
 }
 </script>
