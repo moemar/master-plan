@@ -1,12 +1,13 @@
 <template>
   <div class="home">
-    <template>
+    <div v-for="item in calendar.months" v-bind:key="item.month | moment('MMYY')">
+      <h2>{{ item.month | moment('MMMM') }}</h2>
       <v-expansion-panels>
-        <v-expansion-panel>
+        <v-expansion-panel v-for="week in item.weeks" v-bind:key="week | moment('WYY')">
           <v-expansion-panel-header>
             <template v-slot:default="{ open }">
               <v-row no-gutters>
-                <v-col cols="4">Trip name</v-col>
+                <v-col cols="4">Week {{ week | moment('W') }}</v-col>
                 <v-col
                   cols="8"
                   class="text--secondary"
@@ -16,13 +17,13 @@
                       v-if="open"
                       key="0"
                     >
-                      Enter a name for the trip
+                      Open
                     </span>
                     <span
                       v-else
                       key="1"
                     >
-                      {{ trip.name }}
+                      Not open
                     </span>
                   </v-fade-transition>
                 </v-col>
@@ -30,205 +31,66 @@
             </template>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-text-field
-              v-model="trip.name"
-              placeholder="Caribbean Cruise"
-            ></v-text-field>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-
-        <v-expansion-panel>
-          <v-expansion-panel-header v-slot="{ open }">
-            <v-row no-gutters>
-              <v-col cols="4">Location</v-col>
-              <v-col
-                cols="8"
-                class="text--secondary"
-              >
-                <v-fade-transition leave-absolute>
-                  <span
-                    v-if="open"
-                    key="0"
-                  >
-                    Select trip destination
-                  </span>
-                  <span
-                    v-else
-                    key="1"
-                  >
-                    {{ trip.location }}
-                  </span>
-                </v-fade-transition>
-              </v-col>
-            </v-row>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-row no-gutters>
-              <v-spacer></v-spacer>
-              <v-col cols="5">
-                <v-select
-                  v-model="trip.location"
-                  :items="locations"
-                  chips
-                  flat
-                  solo
-                ></v-select>
-              </v-col>
-
-              <v-divider
-                vertical
-                class="mx-4"
-              ></v-divider>
-
-              <v-col cols="3">
-                Select your destination of choice
-                <br>
-                <a href="javascript:void(0)">Learn more</a>
-              </v-col>
-            </v-row>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                text
-                color="secondary"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                text
-                color="primary"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-
-        <v-expansion-panel>
-          <v-expansion-panel-header v-slot="{ open }">
-            <v-row no-gutters>
-              <v-col cols="4">Start and end dates</v-col>
-              <v-col
-                cols="8"
-                class="text--secondary"
-              >
-                <v-fade-transition leave-absolute>
-                  <span v-if="open">When do you want to travel?</span>
-                  <v-row
-                    v-else
-                    no-gutters
-                    style="width: 100%"
-                  >
-                    <v-col cols="6">Start date: {{ trip.start || 'Not set' }}</v-col>
-                    <v-col cols="6">End date: {{ trip.end || 'Not set' }}</v-col>
-                  </v-row>
-                </v-fade-transition>
-              </v-col>
-            </v-row>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-row
-              justify="space-around"
-              no-gutters
-            >
-              <v-col cols="3">
-                <v-menu
-                  ref="startMenu"
-                  :close-on-content-click="false"
-                  :return-value.sync="trip.start"
-                  offset-y
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="trip.start"
-                      label="Start date"
-                      prepend-icon="event"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="date"
-                    no-title
-                    scrollable
-                  >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="$refs.startMenu.isActive = false"
-                    >Cancel</v-btn>
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="$refs.startMenu.save(date)"
-                    >OK</v-btn>
-                  </v-date-picker>
-                </v-menu>
-              </v-col>
-
-              <v-col cols="3">
-                <v-menu
-                  ref="endMenu"
-                  :close-on-content-click="false"
-                  :return-value.sync="trip.end"
-                  offset-y
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="trip.end"
-                      label="End date"
-                      prepend-icon="event"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="date"
-                    no-title
-                    scrollable
-                  >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="$refs.endMenu.isActive = false"
-                    >
-                      Cancel
-                    </v-btn>
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="$refs.endMenu.save(date)"
-                    >
-                      OK
-                    </v-btn>
-                  </v-date-picker>
-                </v-menu>
-              </v-col>
-            </v-row>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
-    </template>
-
+    </div>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
+import { mapState } from 'vuex'
+
+Vue.use(require('vue-moment'))
+
+const moment = require('moment')
+
 export default {
-  data: () => ({
-    date: null,
-    trip: {
-      name: '',
-      location: null,
-      start: null,
-      end: null
-    },
-    locations: ['Australia', 'Barbados', 'Chile', 'Denmark', 'Equador', 'France']
-  })
+  computed: {
+    ...mapState({
+      startDate: state => state.settings.startDate,
+      endDate: state => state.settings.endDate
+    }),
+    calendar: {
+      get () {
+        var calendar = {
+          months: []
+        }
+
+        const _startDate = moment(this.startDate)
+        const _endDate = moment(this.endDate)
+        const iterateMonth = _startDate.clone().startOf('month')
+
+        while (moment(iterateMonth).isBefore(_endDate)) {
+          const month = iterateMonth.clone()
+          const monthEnd = iterateMonth.clone().endOf('month')
+          const iterateWeek = calendar.months.length === 0 ? _startDate.clone().startOf('isoWeek') : iterateMonth.clone()
+
+          calendar.months.push(this.getMonthObject(iterateWeek, month, monthEnd))
+          iterateMonth.add(1, 'months')
+        }
+
+        return calendar
+      }
+    }
+  },
+  methods: {
+    getMonthObject: function (iterateWeek, month, monthEnd) {
+      var monthObject = {
+        month: null,
+        weeks: []
+      }
+
+      while (moment(iterateWeek).isBefore(monthEnd)) {
+        const week = iterateWeek.clone()
+        monthObject.weeks.push(week)
+        iterateWeek.add(1, 'weeks')
+      }
+
+      monthObject.month = month
+      return monthObject
+    }
+  }
 }
 </script>
