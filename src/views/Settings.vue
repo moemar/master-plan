@@ -1,12 +1,6 @@
 <template>
   <div>
     <h1>Settings</h1>
-    <!-- <v-text-field
-      label="Start Weight"
-      type="number"
-      :value="startWeight"
-      @input="updateStartWeight"
-    ></v-text-field> -->
     <v-row>
       <v-col
         cols="6"
@@ -63,6 +57,31 @@
         </v-dialog>
       </v-col>
     </v-row>
+
+    <v-row>
+      <v-col
+        cols="6"
+        sm="6"
+      >
+      <v-text-field
+        label="Start Weight"
+        type="number"
+        :value="startWeight"
+        @input="updateStartWeight">
+      </v-text-field>
+      </v-col>
+      <v-col
+        cols="6"
+        sm="6"
+      >
+        <v-text-field
+          label="End Weight"
+          type="number"
+          :value="endWeight"
+          @input="updateEndWeight">
+        </v-text-field>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -76,7 +95,8 @@ export default {
   }),
   computed: {
     ...mapState({
-      startWeight: state => state.settings.startWeight
+      startWeight: state => state.settings.startWeight,
+      endWeight: state => state.settings.endWeight
     }),
     startDate: {
       get () {
@@ -97,7 +117,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      updateStartWeight: 'settings/updateStartWeight'
+      updateStartWeight: 'settings/updateStartWeight',
+      updateEndWeight: 'settings/updateEndWeight'
     })
   }
 }

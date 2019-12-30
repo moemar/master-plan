@@ -23,7 +23,7 @@
                       v-else
                       key="1"
                     >
-                      Not open
+                      SW: {{ startWeight }}
                     </span>
                   </v-fade-transition>
                 </v-col>
@@ -40,57 +40,19 @@
 
 <script>
 import Vue from 'vue'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 Vue.use(require('vue-moment'))
-
-const moment = require('moment')
 
 export default {
   computed: {
     ...mapState({
-      startDate: state => state.settings.startDate,
-      endDate: state => state.settings.endDate
+      startWeight: state => state.settings.startWeight
     }),
-    calendar: {
-      get () {
-        var calendar = {
-          months: []
-        }
-
-        const _startDate = moment(this.startDate)
-        const _endDate = moment(this.endDate)
-        const iterateMonth = _startDate.clone().startOf('month')
-
-        while (moment(iterateMonth).isBefore(_endDate)) {
-          const month = iterateMonth.clone()
-          const monthEnd = iterateMonth.clone().endOf('month')
-          const iterateWeek = calendar.months.length === 0 ? _startDate.clone().startOf('isoWeek') : iterateMonth.clone()
-
-          calendar.months.push(this.getMonthObject(iterateWeek, month, monthEnd))
-          iterateMonth.add(1, 'months')
-        }
-
-        return calendar
-      }
-    }
-  },
-  methods: {
-    getMonthObject: function (iterateWeek, month, monthEnd) {
-      var monthObject = {
-        month: null,
-        weeks: []
-      }
-
-      while (moment(iterateWeek).isBefore(monthEnd)) {
-        const week = iterateWeek.clone()
-        monthObject.weeks.push(week)
-        iterateWeek.add(1, 'weeks')
-      }
-
-      monthObject.month = month
-      return monthObject
-    }
+    ...mapGetters({
+      calendar: 'settings/getCalendar',
+      weeklyWeightLoss: 'settings/getWeeklyWeightLoss'
+    })
   }
 }
 </script>
