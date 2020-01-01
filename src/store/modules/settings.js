@@ -57,19 +57,19 @@ const getters = {
   },
   getWeeklyWeightLoss: (state, getters) => {
     const calendar = getters.getCalendar
-    console.log(calendar)
+    // console.log(calendar)
     const weightLoss = state.startWeight - state.endWeight
-    console.log(weightLoss)
+    // console.log(weightLoss)
     let weekCount = 0
-    console.log(weekCount)
+    // console.log(weekCount)
 
     calendar.months.forEach(month => {
       month.weeks.forEach(week => {
         weekCount++
       })
     })
-    console.log(weekCount)
-    console.log(weightLoss / weekCount)
+    // console.log(weekCount)
+    // console.log(weightLoss / weekCount)
     return weightLoss / weekCount
   }
 }
