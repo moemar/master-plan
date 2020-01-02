@@ -87,7 +87,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-
+const moment = require('moment')
 export default {
   data: () => ({
     modalStartDate: false,
@@ -100,18 +100,18 @@ export default {
     }),
     startDate: {
       get () {
-        return this.$store.state.settings.startDate
+        return this.$store.state.settings.startDate.format('YYYY-MM-DD')
       },
       set (newValue) {
-        return this.$store.commit('settings/updateStartDate', newValue)
+        return this.$store.commit('settings/updateStartDate', moment(newValue))
       }
     },
     endDate: {
       get () {
-        return this.$store.state.settings.endDate
+        return this.$store.state.settings.endDate.format('YYYY-MM-DD')
       },
       set (newValue) {
-        return this.$store.commit('settings/updateEndDate', newValue)
+        return this.$store.commit('settings/updateEndDate', moment(newValue))
       }
     }
   },

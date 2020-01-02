@@ -2,10 +2,10 @@ const moment = require('moment')
 
 // initial state
 const state = {
-  startDate: new Date().toISOString().substr(0, 10),
-  endDate: new Date().toISOString().substr(0, 10),
-  startWeight: null,
-  endWeight: null
+  startDate: moment(),
+  endDate: moment(),
+  startWeight: 75,
+  endWeight: 65
 }
 
 // getters
@@ -21,6 +21,18 @@ const getters = {
   },
   getEndWeight: (state, getters) => {
     return state.endWeight
+  },
+  getWeeks: (state, getters) => {
+    let weeks = []
+    const iterateWeek = state.startDate.clone().startOf('isoWeek')
+
+    while (iterateWeek.isBefore(state.endDate)) {
+      const week = iterateWeek.clone()
+      weeks.push(week)
+      iterateWeek.add(1, 'weeks')
+    }
+
+    return weeks
   },
   getCalendar: (state, getters) => {
     var calendar = {
